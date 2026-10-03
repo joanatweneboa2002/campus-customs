@@ -1,0 +1,30 @@
+# ---- Never upload (professor's rule + secrets) ----
+# API keys and other secrets
+.env
+.env.*
+!.env.example
+
+# The database and ALL data files: catalogue DB, product photos, backups
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# ---- Build / install output ----
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node / Vite
+frontend/node_modules/
+frontend/dist/
+
+# Audit-trail files set aside if ever found damaged
+output/audit_trail.damaged-*.json
+
+# macOS
+.DS_Store
+
+# Not part of the submission (warm-up file)
+joke.txt

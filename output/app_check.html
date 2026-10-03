@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Campus Customs: App Check</title>
+    <style>
+      :root {
+        --bg: #f5e8d0;
+        --surface: #fbf1de;
+        --text: #3b2a20;
+        --muted: #7d6656;
+        --terracotta: #d2693c;
+        --yale: #00356b;
+        --sage: #5f6e3a;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        line-height: 1.6;
+      }
+      header {
+        background: var(--yale);
+        color: #fbf1de;
+        padding: 2rem 1.5rem;
+        text-align: center;
+      }
+      header h1 { margin: 0 0 0.3rem; font-family: Georgia, serif; font-size: 2.2rem; }
+      header p { margin: 0; opacity: 0.9; }
+      main { max-width: 960px; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
+      section {
+        background: var(--surface);
+        border: 2px solid var(--text);
+        border-radius: 20px;
+        box-shadow: 6px 6px 0 var(--text);
+        padding: 1.5rem;
+        margin: 2rem 0;
+      }
+      h2 { font-family: Georgia, serif; margin: 0 0 1rem; }
+      h2 .num {
+        display: inline-block;
+        background: var(--terracotta);
+        color: #fbf1de;
+        border-radius: 999px;
+        padding: 0 0.65rem;
+        margin-right: 0.4rem;
+      }
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border: 2px solid var(--text);
+        border-radius: 12px;
+      }
+      .proves { margin: 1rem 0 0; font-size: 1.05rem; }
+      .proves strong { color: var(--sage); }
+      footer { text-align: center; color: var(--muted); font-size: 0.9rem; padding-bottom: 2rem; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Campus Customs: App Check</h1>
+      <p>Three screenshots from the running site, each showing one feature working end to end.</p>
+    </header>
+
+    <main>
+      <section>
+        <h2><span class="num">1</span>Chat gives the real stock from the database</h2>
+        <img src="app_check_images/inventory.png" alt="Buddy the chatbot answering a stock question on a product page, next to the size and stock boxes" />
+        <p class="proves">
+          <strong>What it proves:</strong> Buddy answers stock questions by calling the
+          <code>check_stock</code> tool, which reads the <code>inventory</code> table in
+          <code>campus_customs.db</code>. The numbers in his reply match the size boxes on the same
+          product page, which load from the same table, and a sold-out size is stated plainly.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">2</span>Hoodie cards pop up after asking the chat</h2>
+        <img src="app_check_images/search_cards.png" alt="The Products page filled with hoodie cards under a Buddy's picks banner after asking the chat what hoodies we have" />
+        <p class="proves">
+          <strong>What it proves:</strong> after asking "what hoodies do you have?", the agent sent
+          back its matches as structured <code>page_results</code>. The website turned them into
+          product cards (photo, name, price, short info) on the page, and each card opens that
+          product's detail page.
+        </p>
+      </section>
+
+      <section>
+        <h2><span class="num">3</span>Stock badges on the product cards (Problem 9)</h2>
+        <img src="app_check_images/usability.png" alt="Product cards showing a Low stock badge and size strips with sold-out sizes crossed out" />
+        <p class="proves">
+          <strong>What it proves:</strong> shoppers see availability before they click. Sizes that
+          are sold out in the <code>inventory</code> table are crossed out on each card, nearly-gone
+          sizes are amber, and products running low get a "Low stock" badge. No product is sold out
+          in every size right now, so the all-sizes "Sold out" badge doesn't appear yet, but
+          individual sold-out sizes do.
+        </p>
+      </section>
+    </main>
+
+    <footer>Campus Customs · HW 4 · Problem 11</footer>
+  </body>
+</html>

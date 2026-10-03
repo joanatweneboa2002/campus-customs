@@ -23,7 +23,7 @@ How the Campus Customs shop and its chatbot, **Buddy**, are built: the data, the
 | Spec | Value | Where it's set |
 |---|---|---|
 | **Model** | `gpt-5.6-luna` (OpenAI), through the **Responses API**. Chat completions doesn't allow tool calls for this model. | `agent.py`: `MODEL_NAME` (override with the `MODEL_NAME` env var), `OpenAIResponsesModel` |
-| **API key** | `OPENAI_API_KEY` from the repo-root `.env` (`AI Found/.env`), never sent to the browser | `agent.py`: `load_dotenv` |
+| **API key** | `OPENAI_API_KEY` from the `.env` file (copy `.env.example` to `.env`), never sent to the browser | `agent.py`: `load_dotenv` |
 | **Agent framework** | PydanticAI 2.54 (`Agent` with typed deps, tools, structured output, output validators) | `agent.py` |
 | **Loop limit: model requests** | **8 per chat turn** (a normal turn uses 2–4) | `agent.py`: `MAX_MODEL_REQUESTS`, passed as `UsageLimits(request_limit=8)` |
 | **Loop limit: tool calls** | **12 per chat turn** (a normal turn uses 1–4) | `agent.py`: `MAX_TOOL_CALLS`, `UsageLimits(tool_calls_limit=12)` |
@@ -48,16 +48,18 @@ How the Campus Customs shop and its chatbot, **Buddy**, are built: the data, the
 - copy `.env.example` to `.env` and add your key.
 
 You need **two terminals**: one for the backend and one for the website. Prerequisites:
-- Python 3.12, using the venv at `HW 4/.venv`;
-- Node.js (installed in `~/.local/bin` on this Mac);
-- an `OPENAI_API_KEY` line in the repo-root `.env`.
+- Python 3.12 with a virtual environment (`.venv`);
+- Node.js 20 or newer;
+- an `OPENAI_API_KEY` line in `hw4/.env` (see `.env.example`);
+- the data pack unzipped into `hw4/data/` (`campus_customs.db` and `products/`). It is not in GitHub.
 
 **1. Backend (FastAPI + Buddy), port 8000**
 
 ```bash
-cd "HW 4"
+cd hw4
+python3 -m venv .venv                         # first time only
 source .venv/bin/activate
-pip install -r backend/requirements.txt      # first time only
+pip install -r requirements.txt               # first time only
 cd backend
 uvicorn main:app --reload --port 8000
 ```
@@ -69,7 +71,7 @@ uvicorn main:app --reload --port 8000
 **2. Website (React + Vite), port 5173**
 
 ```bash
-cd "HW 4/frontend"
+cd hw4/frontend
 npm install          # first time only
 npm run dev
 ```
@@ -79,7 +81,7 @@ Open **http://localhost:5173**. Vite forwards `/api/*` and `/images/*` to the ba
 - **Test login:** `test@campuscustoms.yale.edu` / `password`
 - **Production build of the site:** `npm run build` (outputs to `frontend/dist/`)
 
-**Optional one-off scripts** (run from `HW 4/backend` with the venv active)
+**Optional one-off scripts** (run from `hw4/backend` with the venv active)
 
 | Command | What it does |
 |---|---|
@@ -163,7 +165,7 @@ Vite dev server ── proxies /api and /images ──►  FastAPI (backend/main
 
 - **Start the backend** from `backend/` with `uvicorn main:app --reload --port 8000`. Here `main` is `backend/main.py` and `app` is the FastAPI object; `--reload` restarts the server whenever a file in `backend/` changes.
 - **On import:** `main.py` imports `agent.py`, which:
-  - loads environment variables from the repo-root `.env` (`AI Found/.env`, two levels above `backend/`), with an optional `HW 4/.env` as an override;
+  - loads environment variables from `hw4/.env` (one level above `backend/`), or from a `.env` one level higher;
   - reads `MODEL_NAME`, which defaults to `gpt-5.6-luna`.
   - No network call happens yet, so the shop pages work even without a key.
 - **On the first chat message:** `get_agent()` builds the agent once and caches it with `lru_cache`. It assembles four pieces:

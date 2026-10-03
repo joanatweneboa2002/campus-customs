@@ -14,6 +14,10 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 > The problem we just worked on is Problem 2: Analyze the database. i want you to update every prompt in the promt.md file as i instructed . and update every prompt
 
+**What the first prompt was missing:**
+
+My first prompt didn't say the log had to be updated after every new problem, so I had to ask it to keep adding sections as we went.
+
 ---
 
 ## Problem 2: Analyze the database
@@ -25,6 +29,10 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 **Follow-up prompt:**
 
 > yes. but an you open the database at data/campus_customs.db and look at the catalogue, inventory and users tables? I want a new file called output/harness.md. For each table, list all the fields and add one short line on why each one matters for the shop or the chatbot. Keep it simple, I'll be adding more to this file later.
+
+**What the first prompt was missing:**
+
+My first prompt only asked if it could see the data file and didn't say what I wanted done with it, so I had to spell out the tables and the harness.md file.
 
 ---
 
@@ -42,6 +50,10 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 > Ok, its better. some phots still have unclear pictures. Some are blurry and other.... are just not good. Here's the thing tho;  I DONT WANT THAT!. so make sure all the pictures are clear, and very visible, remove the black shadows from the pictures with black shadows and can you change the outlook of the website. i dont want it to be so plain and serious. Add a little personality; you know cus i have personality.
 
+**What the first prompt was missing:**
+
+I didn't describe the look or the photo quality I wanted, so it came out plain, some pictures didn't load or were blurry, and sizes and stock were missing from the detail page.
+
 ---
 
 ## Problem 4: Create account and login
@@ -52,7 +64,11 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 **Follow-up prompt:**
 
-> None
+> Login works for the test user, but can you double check a brand new account works too? Make one, log out, log back in, and try a wrong password. Also show me what the password looks like in the users table so I know it's hashed.
+
+**What the first prompt was missing:**
+
+I only asked about the test user, so I didn't know for sure that new accounts and wrong passwords worked properly.
 
 ---
 
@@ -64,7 +80,11 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 **Follow-up prompt:**
 
-> None
+> The chat works, but can you test the full loop? Send a message from the chat box, make sure it reaches the agent and comes back, and check my API key is only in .env and not in any code file.
+
+**What the first prompt was missing:**
+
+I didn't ask it to test the whole path from the chat box to the agent and back, or to check where my API key was stored.
 
 ---
 
@@ -78,6 +98,10 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 > I asked if the hoodie comes in medium and it said yes, but the database says medium is out of stock. Can you make sure it always checks the stock tool before answering anything about sizes?
 
+**What the first prompt was missing:**
+
+I didn't say it had to check stock every single time, so sometimes it just guessed about sizes.
+
 ---
 
 ## Problem 7: Chat search that updates the page
@@ -88,7 +112,11 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 **Follow-up prompt:**
 
-> None
+> The cards show up when I ask for hoodies. Can you check that clicking one of the new cards opens the detail page, and that asking for something we don't sell doesn't show random cards? When I tested it, "show me Harvard hoodies" filled the whole page with 12 Yale hoodies, and for socks it said the shop on Broadway "may have more accessories," which it can't know. Please fix both.
+
+**What the first prompt was missing:**
+
+I didn't say what should happen when someone asks for something we don't sell, or ask it to test clicking the new cards. Without that rule, the agent filled the page with substitutes and made up a claim about the store.
 
 ---
 
@@ -100,7 +128,11 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 **Follow-up prompt:**
 
-> None
+> Can you check that one customer can never see another customer's chat history? Log in as the test user, chat, log out, then log in as someone else and make sure the old chat doesn't show up.
+
+**What the first prompt was missing:**
+
+I didn't say that customers' chats have to stay private from each other, so I had to check it separately.
 
 ---
 
@@ -114,6 +146,10 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 > Lets work on problem 4 now. About github, how do we fix that? then fix the sizing issue you noticed. i like your suggestion
 
+**What the first prompt was missing:**
+
+I didn't say how the sizes should show on the product cards, so I had to come back and fix the sizing issue.
+
 ---
 
 ## Problem 10: Style the website
@@ -126,6 +162,10 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 > ok great. there is one minor thing tho. The color palette is too bright for my eyes. I want to keep it like this, but lighter, can you changed it? just the color themes, keeo everything else the same
 
+**What the first prompt was missing:**
+
+I didn't say anything about how bright the colors should be, so the palette came out too strong for my eyes.
+
 ---
 
 ## Problem 11: Site testing (app check)
@@ -136,7 +176,11 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 **Follow-up prompt:**
 
-> None
+> Can you open output/app_check.html and make sure all 3 screenshots load, and that each caption says what the screenshot proves, not just what it shows? The captions explain how it works more than what it proves, so please rewrite them to lead with what each test proves.
+
+**What the first prompt was missing:**
+
+I didn't ask it to check that the images actually load or that the captions explain why each test matters. The images loaded, but the captions described how things work instead of what each test proves.
 
 ---
 
@@ -148,7 +192,11 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 **Follow-up prompt:**
 
-> None
+> Can you restart the backend, send a couple chats, and check that audit_trail.json still has the old entries with the new ones added at the bottom?
+
+**What the first prompt was missing:**
+
+I didn't ask it to test with a restart, so I couldn't be sure the file never gets wiped.
 
 ---
 
@@ -156,8 +204,12 @@ A record of the prompts I used with Claude Code for each Homework 4 problem.
 
 **Prompt:**
 
-> Last one, Problem 13! I have a cleaned-up hw4 folder at [paste where you unzipped it]. Please copy my local data folder (campus_customs.db and the product images) into hw4/data so the app still runs on my computer, and copy my .env into hw4/.env. Then replace everything in my campus-customs GitHub repo with this hw4 folder, starting the git history fresh so the old database and images are completely gone. Before pushing, show me the list of files that will be uploaded so I can check there's no .env, .db or images.
+> Last one, Problem 13! I have a cleaned-up hw4 folder. Please copy my local data folder (campus_customs.db and the product images) into hw4/data so the app still runs on my computer, and copy my .env into hw4/.env. Then replace everything in my campus-customs GitHub repo with this hw4 folder, starting the git history fresh so the old database and images are completely gone. Before pushing, show me the list of files that will be uploaded so I can check there's no .env, .db or images.
 
 **Follow-up prompt:**
 
 > My first push had the database and all the product images on GitHub, which my professor said not to do. Can you make sure the .gitignore blocks .env, data/ and .db files, and show me what's on GitHub after the push so I can check?
+
+**What the first prompt was missing:**
+
+My first time pushing, I didn't tell it what to keep off GitHub or ask to see the file list, so the database and images got uploaded.

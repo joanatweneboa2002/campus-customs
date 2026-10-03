@@ -16,8 +16,9 @@ The agent is built once, the first time someone chats, and reused after that:
   - security     <- security.py: flags manipulation in the message (adds a per-turn security
                      notice) and scrubs injected text out of chat history
                      check_sold_out_alternatives: a sold-out size must come with in-stock alternatives
+                     check_not_carried: "we don't sell that" replies can't fill the page with substitutes
   - output type    <- models.AgentOutput (reply text, chat card ids, optional page_results for the website)
-  - model          <- OpenAI Responses API, MODEL_NAME (default gpt-5.6-luna), key from the root .env
+  - model          <- OpenAI Responses API, MODEL_NAME (default gpt-5.6-luna), key from hw4/.env
 """
 
 import logging
@@ -45,9 +46,10 @@ from tools import AGENT_TOOLS, product_cards
 HERE = Path(__file__).resolve().parent
 PROMPT_PATH = HERE / "prompts" / "prompt.md"
 
-# The key lives in the repo-root .env (two levels above backend/).
+# The key lives in hw4/.env (one level above backend/; never committed). The folder above
+# hw4/ is a fallback. load_dotenv never overwrites a value that's already set, so hw4/.env wins.
+load_dotenv(HERE.parent / ".env")
 load_dotenv(HERE.parent.parent / ".env")
-load_dotenv(HERE.parent / ".env")  # optional HW 4-level override
 
 MODEL_NAME = os.getenv("MODEL_NAME", "gpt-5.6-luna")
 log = logging.getLogger("campus_customs.agent")
@@ -228,6 +230,27 @@ def context_instructions(ctx: RunContext[ShopDeps]) -> str:
     return note
 
 
+# Replies that say we don't carry what was asked for.
+NOT_CARRIED_RE = re.compile(
+    r"\b(couldn['’]?t find|could not find|don['’]?t (?:carry|sell|have|stock)|do not (?:carry|sell|have|stock)|"
+    r"not something we (?:carry|sell)|no \w+ in (?:our|the) (?:shop|catalog(?:ue)?|collection))\b", re.I)
+MAX_SUBSTITUTE_CARDS = 2
+
+
+def check_not_carried(ctx: RunContext[ShopDeps], output: AgentOutput) -> AgentOutput:
+    """Output validator: if Buddy says we don't carry it, he mustn't fill the page with
+    substitutes, and may show at most 2 close alternatives in the chat."""
+    if not NOT_CARRIED_RE.search(output.reply):
+        return output
+    if output.page_results is not None or len(output.product_ids) > MAX_SUBSTITUTE_CARDS:
+        log.warning("rejected 'we don't carry it' reply that still filled the page / showed many cards")
+        raise ModelRetry(
+            "You told the shopper we don't carry what they asked for, so don't fill the page: set page_results "
+            f"to null and show at most {MAX_SUBSTITUTE_CARDS} genuinely close items in product_ids (or none)."
+        )
+    return output
+
+
 def check_sold_out_alternatives(ctx: RunContext[ShopDeps], output: AgentOutput) -> AgentOutput:
     """Output validator: when the shopper's size is sold out, don't just say no. Buddy must
     call find_alternatives and show at least one in-stock alternative as a card."""
@@ -254,7 +277,7 @@ def get_agent() -> Agent[ShopDeps, AgentOutput]:
     """Create the agent once. Fails loudly (caught in chat()) if the API key is missing."""
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is not set; add it to the root .env file")
+        raise RuntimeError("OPENAI_API_KEY is not set; add it to hw4/.env (see .env.example)")
 
     # Responses API: gpt-5.6-luna only supports tool calling there, not on chat completions.
     model = OpenAIResponsesModel(MODEL_NAME, provider=OpenAIProvider(api_key=api_key))
@@ -273,6 +296,7 @@ def get_agent() -> Agent[ShopDeps, AgentOutput]:
     agent.output_validator(check_numbers)
     agent.output_validator(check_size_answers)
     agent.output_validator(check_sold_out_alternatives)
+    agent.output_validator(check_not_carried)
     return agent
 
 
